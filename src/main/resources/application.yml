@@ -1,0 +1,78 @@
+spring:
+  application:
+    name: treinamentos
+
+  datasource:
+    url: ${DB_URL:jdbc:postgresql://localhost:5432/treinamentos}
+    username: ${DB_USER:db_lablims}
+    password: ${DB_PASSWORD:Beast666@0123}
+    driver-class-name: org.postgresql.Driver
+    hikari:
+      maximum-pool-size: 20
+      minimum-idle: 5
+      idle-timeout: 300000
+      connection-timeout: 20000
+      max-lifetime: 1200000
+
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    show-sql: false
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: true
+        jdbc:
+          batch_size: 20
+        order_inserts: true
+        order_updates: true
+
+  flyway:
+    enabled: false
+
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 10MB
+
+  jackson:
+    serialization:
+      write-dates-as-timestamps: false
+    deserialization:
+      fail-on-unknown-properties: false
+
+server:
+  port: ${APP_PORT:8089}
+
+app:
+  jwt:
+    secret: ${JWT_SECRET:YXNkZmFzZGZhc2RmYXNkZmFzZGZhc2RmYXNkZmFzZGZhc2RmYXNkZmFzZGZh}
+    expiration: ${JWT_EXPIRATION:900000}
+  
+  antygravity:
+    api:
+      url: ${ANTYGRAVITY_API_URL:https://api.minimax.chat/v1}
+      key: ${ANTYGRAVITY_API_KEY:}
+      model: ${ANTYGRAVITY_API_MODEL:minimax-m2.5}
+  
+  cors:
+    allowed-origins: http://localhost:5173,http://localhost:3000
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics
+  endpoint:
+    health:
+      show-details: when-authorized
+
+logging:
+  level:
+    root: INFO
+    com.farma.treinamentos: DEBUG
+    org.springframework.security: DEBUG
+    org.hibernate.SQL: DEBUG
+
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"

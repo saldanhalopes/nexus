@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nexus | Gestão de Treinamentos</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="login-screen" class="screen active">
+        <div class="glass-card login-card">
+            <h1>Nexus</h1>
+            <p>Acesse sua conta para continuar</p>
+            <form id="login-form">
+                <div class="form-group">
+                    <label for="username">Email ou Matrícula</label>
+                    <input type="text" id="username" required placeholder="Digite seu email">
+                </div>
+                <div class="form-group">
+                    <label for="password">Senha</label>
+                    <input type="password" id="password" required placeholder="••••••••">
+                </div>
+                <button type="submit" class="btn-primary">Entrar</button>
+            </form>
+            <div id="login-error" class="error-msg"></div>
+        </div>
+    </div>
+
+    <div id="main-screen" class="screen">
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <h2>Nexus</h2>
+            </div>
+            <nav class="sidebar-nav">
+                <a href="#dashboard" class="nav-item active" data-page="dashboard">
+                    <i class="fas fa-chart-line"></i> Dashboard
+                </a>
+                <a href="#matriz" class="nav-item" data-page="matriz">
+                    <i class="fas fa-th"></i> Matriz de Competência
+                </a>
+                <a href="#treinamentos" class="nav-item" data-page="treinamentos">
+                    <i class="fas fa-graduation-cap"></i> Treinamentos
+                </a>
+                <a href="#utilizadores" class="nav-item" data-page="utilizadores">
+                    <i class="fas fa-user-shield"></i> Gestão de Acesso
+                </a>
+                <a href="#auditoria" class="nav-item" data-page="auditoria">
+                    <i class="fas fa-clipboard-check"></i> Auditoria (Part 11)
+                </a>
+            </nav>
+            <div class="sidebar-footer">
+                <div class="user-info">
+                    <div class="user-avatar" id="user-initials">--</div>
+                    <div class="user-details">
+                        <span id="user-name">Carregando...</span>
+                        <span id="user-role">Usuário</span>
+                    </div>
+                </div>
+                <button id="logout-btn" class="btn-icon" title="Sair"><i class="fas fa-power-off"></i></button>
+            </div>
+        </aside>
+
+        <main class="content">
+            <header class="content-header">
+                <h1 id="page-title">Dashboard</h1>
+                <div class="header-actions">
+                    <div id="current-date" class="date-badge">--/--/----</div>
+                    <button class="btn-secondary btn-icon"><i class="fas fa-bell"></i></button>
+                </div>
+            </header>
+            <div id="page-content" class="page-content">
+                <!-- Conteúdo dinâmico aqui -->
+            </div>
+        </main>
+
+        <div id="chat-container">
+            <button id="chat-toggle" class="chat-btn"><i class="fas fa-brain"></i></button>
+            <div id="chat-window" class="chat-window hidden">
+                <div class="chat-header">
+                    <span><i class="fas fa-robot"></i> Nexus Intelligence</span>
+                    <button id="chat-close"><i class="fas fa-times"></i></button>
+                </div>
+                <div id="chat-messages" class="chat-messages">
+                    <div class="message system">Olá! Sou o assistente inteligente da Nexus. Como posso ajudar na conformidade dos seus treinamentos hoje?</div>
+                </div>
+                <form id="chat-form" class="chat-input-area">
+                    <input type="text" id="chat-input" placeholder="Pergunte sobre GxP, Matriz...">
+                    <button type="submit"><i class="fas fa-paper-plane"></i></button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Assinatura Eletrônica (FDA 21 CFR Part 11) -->
+    <div id="signature-modal" class="modal-overlay hidden">
+        <div class="glass-card modal-content">
+            <div class="signature-badge"><i class="fas fa-shield-alt"></i> Assinatura Requerida</div>
+            <h2>Confirmação de Ação</h2>
+            <p id="signature-action-text" class="text-muted">Você está prestes a realizar uma alteração crítica que requer assinatura eletrônica.</p>
+            
+            <form id="signature-form">
+                <div class="form-group">
+                    <label>Motivo da Alteração</label>
+                    <select id="signature-reason" required class="form-group input">
+                        <option value="CRIAÇÃO">Nova Implantação</option>
+                        <option value="ATUALIZAÇÃO">Atualização Periódica</option>
+                        <option value="CORREÇÃO">Correção de Erro</option>
+                        <option value="OBSOLESCÊNCIA">Desativação de Registro</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Sua Senha de Acesso</label>
+                    <input type="password" id="signature-password" placeholder="Confirme sua senha" required>
+                </div>
+                <div style="display: flex; gap: 12px; margin-top: 32px;">
+                    <button type="button" id="cancel-signature" class="btn-primary" style="background: var(--glass-bg); color: white;">Cancelar</button>
+                    <button type="submit" class="btn-primary">Assinar e Confirmar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div id="toast-container"></div>
+
+    <div id="loading-overlay" class="overlay hidden">
+        <div class="loader"></div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>

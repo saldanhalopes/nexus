@@ -1,0 +1,68 @@
+services:
+  postgres:
+    image: postgres:14-alpine
+    container_name: treinamentos-db
+    environment:
+      POSTGRES_DB: ${DB_NAME:-treinamentos}
+      POSTGRES_USER: ${DB_USER:-db_lablims}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./setup-local-db.sql:/docker-entrypoint-initdb.d/setup-local-db.sql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER:-db_lablims} -d ${DB_NAME:-treinamentos}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - treinamentos-net
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: treinamentos-app
+    environment:
+      DB_URL: jdbc:postgresql://postgres:5432/${DB_NAME:-treinamentos}
+      DB_USER: ${DB_USER:-db_lablims}
+      DB_PASSWORD: ${DB_PASSWORD}
+      JWT_SECRET: ${JWT_SECRET}
+      JWT_EXPIRATION: ${JWT_EXPIRATION:-900000}
+    ports:
+      - "${BACKEND_PORT:-8089}:8080"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - treinamentos-net
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      args:
+        NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL:-http://app:8080}
+    image: treinamentos-frontend:latest
+    container_name: treinamentos-ui
+    environment:
+      NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL:-http://app:8080}
+    ports:
+      - "${FRONTEND_PORT:-3000}:3000"
+    depends_on:
+      - app
+    networks:
+      - treinamentos-net
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:3000"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+
+volumes:
+  postgres_data:
+
+networks:
+  treinamentos-net:
+    driver: bridge
